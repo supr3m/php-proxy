@@ -32,6 +32,6 @@ class GuzzleAdapter implements AdapterInterface {
      */
     public function send(RequestInterface $request)
     {
-        return $this->client->send($request);
+        return $this->client->send( $request, [ 'http_errors' => false ] );
     }
 }
