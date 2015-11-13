@@ -76,8 +76,11 @@ class Proxy {
             ->withHost($target->getHost());
 
         // Check for custom port.
-        if ($port = $target->getPort()) {
+        if ( $port = $target->getPort() ) {
             $uri = $uri->withPort($port);
+        } else {
+            // Default port? no matter, add it!
+            $uri = $this->setDefaultPort( $uri, $target );
         }
 
         // Check for subdirectory.
@@ -99,6 +102,21 @@ class Proxy {
         $relay = (new RelayBuilder)->newInstance($stack);
 
         return $relay($request, new Response);
+    }
+
+    /**
+     * Add port to proxy request
+     * @param  $uri
+     * @param  Uri    $target
+     * @return $uri
+     */
+    private function setDefaultPort( $uri, Uri $target ) {
+        switch ( $target->getScheme() ) {
+            case 'http':  $uri = $uri->withPort( 80 );  break;
+            case 'https': $uri = $uri->withPort( 443 ); break;
+        }
+
+        return $uri;
     }
 
     /**
