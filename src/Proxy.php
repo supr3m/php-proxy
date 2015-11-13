@@ -91,7 +91,7 @@ class Proxy {
 
         $stack[] = function (RequestInterface $request, ResponseInterface $response, callable $next)
         {
-            $response = $this->adapter->send($request);
+            $response = $this->adapter->send($request, [ 'http_errors' => false ] );
 
             return $next($request, $response);
         };
